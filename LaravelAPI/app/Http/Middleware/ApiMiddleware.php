@@ -24,12 +24,13 @@ class ApiMiddleware
         if ($checkToken) {
 
             return $next($request);
+
         } else {
 
             return response()->json([
                 'code' => 400,
                 'status' =>  'Error',
-                'message' => 'Usuario no identificado'
+                'message' => 'Debe Iniciar sesión'
             ], 400);
         }
     }

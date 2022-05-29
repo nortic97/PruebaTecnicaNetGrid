@@ -109,16 +109,103 @@ class UsuarioController extends Controller
 
     public function update(Request $request, $id)
     {
-        $json = $request->input('json',null);
+        $json = $request->input('json', null);
         $params = json_decode($json);
         $paramsArray = json_decode($json, true);
 
+        $data = Usuario::find($id);
+
+        if ($data == null) {
+
+            return response()->json([
+                'status' => 'Error',
+                'code' => 404,
+                'message' => 'el dato no existe',
+                'search' => $id
+            ]);
+        } else {
+
+
+            if (!empty($paramsArray)) {
+
+                $validate = Validator::make($paramsArray, [
+                    'usuario' => 'required',
+                    'nombres' => 'required',
+                    'apellidos' => 'required',
+                    'tipo_de_identificacion' => 'required',
+                    'numero_de_identificacion' => 'required',
+                    'fecha_de_nacimiento' => 'required',
+                    'contrasena' => 'required'
+                ]);
+
+                if ($validate->fails()) {
+
+                    return $json = response()->json([
+
+                        'status' => 'Error',
+                        'code' => 400,
+                        'message' => $validate->errors()
+
+                    ], 400);
+                } else {
+
+                    unset($paramsArray['id']);
+                    unset($paramsArray['created_at']);
+
+                    $pwd = hash('sha256', $params->contrasena);
+
+                    if ($data->contrasena != $paramsArray['contrasena']) {
+
+                        $paramsArray['contrasena'] = $pwd;
+                    }
+
+                    Usuario::where('id', $id)->update($paramsArray);
+
+                    return $json = response()->json([
+
+                        'status' => 'Success',
+                        'code' => 200,
+                        'usuario' => $paramsArray
+
+                    ], 400);
+                }
+            } else {
+
+                return response()->json([
+                    'status' => 'Error',
+                    'code' => 404,
+                    'message' => 'No se han enviado datos',
+                    'search' => $id
+                ]);
+            }
+        }
     }
 
 
     public function destroy($id)
     {
-        //
+
+        $usuario = Usuario::find($id);
+
+        if (!empty($usuario)) {
+
+            $usuario->delete();
+
+            return response()->json([
+                'status' => 'Success',
+                'code' => 200,
+                'message' => 'Se ha eliminado el Usuario',
+                'search' => $usuario
+            ]);
+        } else {
+
+            return response()->json([
+                'status' => 'Error',
+                'code' => 400,
+                'message' => 'No existe el Usuario',
+                'search' => $id
+            ]);
+        }
     }
 
     public function login(Request $request)
@@ -155,9 +242,7 @@ class UsuarioController extends Controller
             if (!empty($params->getToken)) {
 
                 $login = $jwtAuth->Login($params->usuario, $pwd, true);
-
             }
-
         }
 
         return $json = response()->json($login, 200);
