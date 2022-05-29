@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Usuario;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UsuarioController extends Controller
@@ -11,22 +12,19 @@ class UsuarioController extends Controller
 
     public function index()
     {
-        $data = Usuario::all();
+        $data = DB::table('usuarios')->paginate(10);
 
-        if($data->isEmpty()){
-            
+        if ($data->isEmpty()) {
+
             return response()->json([
-                'status'=>'Error',
-                'code'=>404,
-                'message'=>'Base de datos vacia'
+                'status' => 'Error',
+                'code' => 404,
+                'message' => 'Base de datos vacía'
             ]);
-            
-        }else{
-            
+        } else {
+
             return response()->json($data, 200);
-            
         }
-        
     }
 
 
@@ -58,17 +56,16 @@ class UsuarioController extends Controller
 
             return $json = response()->json([
 
-                'status'=>'Error',
-                'code'=>400,
-                'message'=>$validate->errors()
+                'status' => 'Error',
+                'code' => 400,
+                'message' => $validate->errors()
 
             ], 400);
-
         } else {
 
             //encriptar contraseñas
 
-            $pwd = hash('sha256',$params->contrasena);
+            $pwd = hash('sha256', $params->contrasena);
 
             $usuario = new Usuario();
             $usuario->usuario = $paramsArray['usuario'];
@@ -83,14 +80,12 @@ class UsuarioController extends Controller
 
             return $json = response()->json([
 
-                'status'=>'succes',
-                'code'=>200,
-                'message'=>$usuario
+                'status' => 'success',
+                'code' => 200,
+                'message' => $usuario
 
             ], 200);
-
         }
-        
     }
 
 
@@ -98,30 +93,73 @@ class UsuarioController extends Controller
     {
         $data = Usuario::find($id);
 
-        if($data == null){
-            
+        if ($data == null) {
+
             return response()->json([
-                'status'=>'Error',
-                'code'=>404,
-                'message'=>'el dato no existe',
-                'search'=>$id
+                'status' => 'Error',
+                'code' => 404,
+                'message' => 'el dato no existe',
+                'search' => $id
             ]);
-            
-        }else{
-            
+        } else {
+
             return response()->json($data, 200);
-            
         }
     }
 
     public function update(Request $request, $id)
     {
-        //
+        $json = $request->input('json',null);
+        $params = json_decode($json);
+        $paramsArray = json_decode($json, true);
+
     }
 
 
     public function destroy($id)
     {
         //
+    }
+
+    public function login(Request $request)
+    {
+
+        $jwtAuth = new \JwtAuth();
+
+        $json = $request->input('json', null);
+
+        $params = json_decode($json);
+
+        $paramsArray = json_decode($json, true);
+
+        $validate = Validator::make($paramsArray, [
+            'usuario' => 'required',
+            'contrasena' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+
+            return $json = response()->json([
+
+                'status' => 'Error',
+                'code' => 400,
+                'message' => $validate->errors()
+
+            ], 400);
+        } else {
+
+            $pwd = hash('SHA256', $params->contrasena);
+
+            $login = $jwtAuth->Login($params->usuario, $pwd);
+
+            if (!empty($params->getToken)) {
+
+                $login = $jwtAuth->Login($params->usuario, $pwd, true);
+
+            }
+
+        }
+
+        return $json = response()->json($login, 200);
     }
 }
