@@ -43,18 +43,18 @@
         </thead>
         <tbody id="cuerpo-tabla">
           <tr *ngFor="let user of usuario">
-            <th>{{ user.id }}</th>
-            <th>{{ user.usuario }}</th>
-            <th>{{ user.nombres }}</th>
-            <th>{{ user.apellidos }}</th>
-            <th>{{ user.tipo_de_identificacion }}</th>
-            <th>{{ user.numero_de_identificacion }}</th>
-            <th>{{ user.fecha_de_nacimiento | date}}</th>
-            <th class="text-break">{{ user.contrasena }}</th>
+            <th #idt name="idt" >{{ user.id }}</th>
+            <th #usuariot name="usuariot" >{{ user.usuario }}</th>
+            <th #nombrest name="nombrest" >{{ user.nombres }}</th>
+            <th #apellidost name="apellidost">{{ user.apellidos }}</th>
+            <th #tipodt name="tipod">{{ user.tipo_de_identificacion }}</th>
+            <th #numerodt name="numerodt">{{ user.numero_de_identificacion }}</th>
+            <th #nacimientot name="nacimientot">{{ user.fecha_de_nacimiento}}</th>
+            <th #contrasenat name="contrasenat" class="text-break">{{ user.contrasena }}</th>
             <td>
-              <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i></button>
+              <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editarModal" (click)="mostrar(idt,usuariot,nombrest,apellidost,tipodt,numerodt,nacimientot,contrasenat)" ><i class="bi bi-pencil-square"></i></button>
             </td>
-            <td>
+            <td #usuariot name="usuariot">
               <button type="button" class="btn btn-outline-danger" (click)="eliminar(user.id)" ><i class="bi bi-trash"></i></button>
             </td>
           </tr>
@@ -64,44 +64,60 @@
   </div>
 </div>
 
+
 <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Editar datos</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Guardar nuevo Usuario</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="container">
           <div class="d-flex justify-content-center">
 
-            <form action="">
+            <form #registro="ngForm">
 
               <div class="mb-3">
-                <label for="idcliente-form" class="form-label">ID Cliente</label>
-                <select class="form-select" name="rol-select" id="idcliente-form">
-                  <option selected>Elija una opción</option>
-                  <option value="1">1 - David Nova</option>
-                  <option value="2">2 - Milena Cuenca</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="idusuario-form" class="form-label">ID Usuario</label>
-                <select class="form-select" name="rol-select" id="idusuario-form">
-                  <option selected>Elija una opción</option>
-                  <option value="1">1 - Miguel Cutiva</option>
-                  <option value="2">2 - Diego Romero</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="total-form" class="form-label">Total</label>
+                <label for="usuario-form" class="form-label">Usuario</label>
                 <div class="input-group mb-3">
-                  <span class="input-group-text">$</span>
-                  <input type="text" class="form-control" aria-label="Precio" id="precio-form">
-                  <span class="input-group-text">.00</span>
+                  <span class="input-group-text">@</span>
+                  <input name="usuarioForm" ngModel type="text" id="usuario-form" class="form-control" placeholder="@tuNick" aria-label="Username" aria-describedby="basic-addon1">
                 </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="nombres-form" class="form-label">Nombres</label>
+                <input name="nombresForm" ngModel type="text" id="nombres-form" class="form-control" placeholder="Jhon" aria-label="nombres" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="apellidos-form" class="form-label">apellidos</label>
+                <input name="apellidosForm" ngModel type="text" id="apellidos-form" class="form-control" placeholder="Doe" aria-label="apellidos" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="tipo-de-documento-form" class="form-label">Tipo de documento</label>
+                <select class="form-select" name="tipoDeDocumentoForm" ngModel id="tipo-de-documento-form">
+                  <option selected>Elija una opción</option>
+                  <option value="CC">1 - CC</option>
+                  <option value="TI">2 - TI</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="numero-de-documento-form" class="form-label">Numero de documento</label>
+                <input name="numeroDeDocumentoForm" ngModel type="text" id="numero-de-documento-form" class="form-control" placeholder="123456789" aria-label="numero-de-documento-form" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="fecha-de-nacimiento-form" class="form-label">Fecha de nacimiento</label>
+                <input name="fechaDeNacimientoForm" ngModel type="date" id="fecha-de-nacimiento-form" class="form-select" aria-label="fecha-de-nacimiento-form" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="contrasena-form" class="form-label">Contraseña</label>
+                <input name="contrasenaForm" ngModel type="password" id="contrasena-form" class="form-control" aria-label="contrasena-form" aria-describedby="basic-addon1">
               </div>
 
             </form>
@@ -111,7 +127,75 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar cambios</button>
+        <button type="button" class="btn btn-primary" (click)="guardarDato(registro)">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="d-flex justify-content-center">
+
+            <form #editar="ngForm">
+
+              <div class="mb-3">
+                <label for="usuarioe-form" class="form-label">Usuario</label>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">@</span>
+                  <input #usuarioeForm ngModel name="usuarioeForm" type="text" id="usuarioe-form" class="form-control" placeholder="@tuNick" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="nombrese-form" class="form-label">Nombres</label>
+                <input #nombreseForm name="nombreseForm" ngModel type="text" id="nombrese-form" class="form-control" placeholder="Jhon" aria-label="nombres" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="apellidose-form" class="form-label">apellidos</label>
+                <input #apellidoseForm name="apellidoseForm" ngModel type="text" id="apellidose-form" class="form-control" placeholder="Doe" aria-label="apellidos" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="tipo-de-documentoe-form" class="form-label">Tipo de documento</label>
+                <select #tipoDeDocumentoeForm class="form-select" name="tipoDeDocumentoeForm" ngModel id="tipo-de-documentoe-form">
+                  <option selected>Elija una opción</option>
+                  <option value="CC">1 - CC</option>
+                  <option value="TI">2 - TI</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="numero-de-documentoe-form" class="form-label">Numero de documento</label>
+                <input #numeroDeDocumentoeForm name="numeroDeDocumentoeForm" ngModel type="text" id="numero-de-documentoe-form" class="form-control" placeholder="123456789" aria-label="numero-de-documento-form" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="fecha-de-nacimientoe-form" class="form-label">Fecha de nacimiento</label>
+                <input #fechaDeNacimientoeForm name="fechaDeNacimientoeForm" ngModel type="date" id="fecha-de-nacimientoe-form" class="form-select" aria-label="fecha-de-nacimiento-form" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="mb-3">
+                <label for="contrasenae-form" class="form-label">Contraseña</label>
+                <input #contrasenaeForm name="contrasenaeForm" ngModel type="password" id="contrasenae-form" class="form-control" aria-label="contrasena-form" aria-describedby="basic-addon1">
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="editarDato(editar)">Actualizar</button>
       </div>
     </div>
   </div>

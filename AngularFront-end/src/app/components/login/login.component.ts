@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService,
     private router:Router
   ) {
-    this.user = new Usuario(1, '', '', '', '', '', '', '', '');
+    this.user = new Usuario(1, '', '', '', '', '', '', '');
     this.status = '';
   }
 

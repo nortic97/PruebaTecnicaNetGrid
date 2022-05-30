@@ -19,12 +19,6 @@ export class LoginService {
 
   Login(usuario:Usuario, token:any = null): Observable<any>{
 
-    if(token != null){
-
-        usuario.gettoken = 'true';
-
-    }
-
     let json = JSON.stringify(usuario);
     let params = 'json='+json;
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
