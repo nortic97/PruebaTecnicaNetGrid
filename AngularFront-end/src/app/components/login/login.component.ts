@@ -36,11 +36,16 @@ export class LoginComponent implements OnInit {
     this.loginService.Login(this.user).subscribe(
       response => {
 
-        if (response.status != 'error') {
+        if (response.status != 'Error') {
 
           this.token = response;
           localStorage.setItem('token', this.token);
           this.router.navigate(['usuario']);
+
+        }else{
+
+          alert("Contraseña o Usuario inválidos");
+          localStorage.setItem('token', 'undefined');
 
         }
 
