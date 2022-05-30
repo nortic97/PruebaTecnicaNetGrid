@@ -35,17 +35,7 @@ export class LoginService {
 
   getToken(){
 
-    let token = localStorage.getItem('token');
-
-    if(token != "undefined"){
-
-      return true;
-
-    }else{
-
-      return false;
-
-    }
+    return this.token = localStorage.getItem('token') != null;
 
   }
 
@@ -53,7 +43,7 @@ export class LoginService {
 
     let token = localStorage.getItem('token');
 
-    if(token != "undefined"){
+    if(token != ''){
 
       this.token = token;
 

@@ -45,7 +45,6 @@ export class LoginComponent implements OnInit {
         }else{
 
           alert("Contraseña o Usuario inválidos");
-          localStorage.setItem('token', 'undefined');
 
         }
 
@@ -53,10 +52,6 @@ export class LoginComponent implements OnInit {
       error => {
         this.status = error;
       });
-  }
-
-  getToken(){
-    console.log(this.loginService.getToken());
   }
 
 }

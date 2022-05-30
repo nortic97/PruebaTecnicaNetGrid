@@ -6,9 +6,9 @@ import { LoginGuard } from './guardians/login.guard';
 import { UsuarioGuard } from './guardians/usuario.guard';
 
 const routes: Routes = [
-  {path: '', component: LoginComponent,  },
-  {path: 'login', component: UsuarioComponent,   },
-  {path: 'usuario', component: UsuarioComponent, }
+  {path: '', component: LoginComponent, canActivate:[LoginGuard]},
+  {path: 'login', component: LoginComponent, canActivate:[LoginGuard]},
+  {path: 'usuario', component: UsuarioComponent, canActivate:[UsuarioGuard]}
 ];
 
 @NgModule({

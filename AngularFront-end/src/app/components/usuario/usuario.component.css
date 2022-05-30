@@ -1,0 +1,11 @@
+.sticky-offset {
+  top: 60px;
+}
+
+.centrar-thead {
+  text-align: center;
+}
+
+.sticky-offset-mobile {
+  bottom: 100px;
+}

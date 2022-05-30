@@ -8,7 +8,7 @@ import { LoginService } from './login.service';
 })
 export class UsuarioService {
 
-  public url:string = 'http://127.0.0.1:8000/api/usuario?page=';
+  public url:string = 'http://127.0.0.1:8000/api/usuario';
 
   constructor(public http:HttpClient,
               private loginService: LoginService){ }
@@ -19,7 +19,18 @@ export class UsuarioService {
 
       let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded').set('Autorization', token);
 
-      return this.http.get<any>(this.url+numberPage, {headers: headers});
+      return this.http.get<any>(this.url+"?page="+numberPage, {headers: headers});
 
     }
+
+    deleteUsuarios(id:any){
+
+      var token = this.loginService.getTokenCode();
+
+      let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded').set('Autorization', token);
+
+      return this.http.delete<any>(this.url+"/"+id, {headers: headers});
+
+    }
+
 }

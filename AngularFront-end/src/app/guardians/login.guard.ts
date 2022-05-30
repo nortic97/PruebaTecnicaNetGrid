@@ -19,7 +19,7 @@ export class LoginGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot){
 
-      if(this.loginService.getToken()){
+      if(this.loginService.getToken() == false){
 
         return true;
 

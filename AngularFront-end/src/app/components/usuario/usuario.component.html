@@ -8,7 +8,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active p-0" aria-current="page" href="Inicio.html"><button
-              class="btn btn-sm btn-outline-light" type="button"><i class="bi bi-arrow-left-circle"></i>
+              class="btn btn-sm btn-outline-light" type="button" (click)="CerrarSesion()" ><i class="bi bi-arrow-left-circle"></i>
               Salir</button></a>
         </li>
       </ul>
@@ -31,6 +31,7 @@
         <thead class="sticky-top table-dark sticky-offset centrar-thead">
           <tr>
             <th scope="col">ID</th>
+            <th scope="col">Usuario</th>
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
             <th scope="col">Tipo de identificación</th>
@@ -43,18 +44,75 @@
         <tbody id="cuerpo-tabla">
           <tr *ngFor="let user of usuario">
             <th>{{ user.id }}</th>
+            <th>{{ user.usuario }}</th>
             <th>{{ user.nombres }}</th>
             <th>{{ user.apellidos }}</th>
             <th>{{ user.tipo_de_identificacion }}</th>
             <th>{{ user.numero_de_identificacion }}</th>
             <th>{{ user.fecha_de_nacimiento | date}}</th>
             <th class="text-break">{{ user.contrasena }}</th>
-            <td><button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
-                data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i></button></td>
-            <td><button type="button" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button></td>
+            <td>
+              <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i></button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-outline-danger" (click)="eliminar(user.id)" ><i class="bi bi-trash"></i></button>
+            </td>
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar datos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="d-flex justify-content-center">
+
+            <form action="">
+
+              <div class="mb-3">
+                <label for="idcliente-form" class="form-label">ID Cliente</label>
+                <select class="form-select" name="rol-select" id="idcliente-form">
+                  <option selected>Elija una opción</option>
+                  <option value="1">1 - David Nova</option>
+                  <option value="2">2 - Milena Cuenca</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="idusuario-form" class="form-label">ID Usuario</label>
+                <select class="form-select" name="rol-select" id="idusuario-form">
+                  <option selected>Elija una opción</option>
+                  <option value="1">1 - Miguel Cutiva</option>
+                  <option value="2">2 - Diego Romero</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="total-form" class="form-label">Total</label>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$</span>
+                  <input type="text" class="form-control" aria-label="Precio" id="precio-form">
+                  <span class="input-group-text">.00</span>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar cambios</button>
+      </div>
     </div>
   </div>
 </div>
