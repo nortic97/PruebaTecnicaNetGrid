@@ -33,14 +33,6 @@ export class UsuarioComponent implements OnInit {
 
   public numberPage: any = '1';
 
-  private usuarioU: any = '';
-  private nombresU: any = '';
-  private apellidosU: any = '';
-  private tipoDeIdentificacionU: any = '';
-  private numeroDeIdentificacionU: any = '';
-  private fechaDeNacimientoU: any = '';
-  private contrasenaU: any = '';
-
   constructor(
     private usuarioService: UsuarioService,
     private router: Router
@@ -109,18 +101,17 @@ export class UsuarioComponent implements OnInit {
 
   editarDato(form: NgForm){
 
+    const usuarioU = form.value.usuarioeForm;
+    const nombresU = form.value.nombreseForm;
+    const apellidosU = form.value.apellidoseForm;
+    const tipoDeIdentificacionU = form.value.tipoDeDocumentoeForm;
+    const numeroDeIdentificacionU = form.value.numeroDeDocumentoeForm;
+    const fechaDeNacimientoU = form.value.fechaDeNacimientoeForm;
+    const contrasenaU = form.value.contrasenaeForm;
 
-    this.usuarioU = usuariot.innerHTML.valueOf();
-    this.nombresU = nombrest.innerHTML.valueOf();
-    this.apellidosU = apellidost.innerHTML.valueOf();
-    this.tipoDeIdentificacionU = tipodt.innerHTML.valueOf();
-    this.numeroDeIdentificacionU = numerodt.innerHTML.valueOf();
-    this.fechaDeNacimientoU = nacimientot.innerHTML.valueOf();
-    this.contrasenaU = contrasenat.innerHTML.valueOf();
+    var userEdit = new Usuario(1, usuarioU, nombresU, apellidosU, tipoDeIdentificacionU, numeroDeIdentificacionU, fechaDeNacimientoU, contrasenaU);
 
-    var userEdit = new Usuario(1, this.usuarioU, this.nombresU, this.apellidosU, this.tipoDeIdentificacionU, this.numeroDeIdentificacionU, this.fechaDeNacimientoU, this.contrasenaU);
-
-      console.log(form.usuarioeForm);
+      console.log(userEdit);
 
       var respuesta = confirm("¿Seguro de editar el formulario?");
 
