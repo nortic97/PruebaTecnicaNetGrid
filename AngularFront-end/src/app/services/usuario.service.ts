@@ -48,7 +48,7 @@ export class UsuarioService {
 
     }
 
-    putUsuarios(user: Usuario, id:any): Observable<any>{
+    putUsuarios(user: Usuario, id:any){
 
       var token = this.loginService.getTokenCode();
 
@@ -58,7 +58,7 @@ export class UsuarioService {
 
       var json = 'json='+params;
 
-      return this.http.put<any>(this.url+"/"+id, json, {headers: headers});
+      return this.http.put(this.url+"/"+id, json, {headers: headers});
 
     }
 

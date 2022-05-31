@@ -1,3 +1,4 @@
+import { formatNumber } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,11 +28,12 @@ export class UsuarioComponent implements OnInit {
   contrasenaeForm!: ElementRef;
 
   public usuario: Usuario[] = [];
-  private pagination = [];
+  public CantidadPaginas:number = 0;
+  public current_page:number = 1;
+  public last_page:number = 0;
+  public total_elements:number = 0;
 
   private identificador = '';
-
-  public numberPage: any = '1';
 
   constructor(
     private usuarioService: UsuarioService,
@@ -47,13 +49,16 @@ export class UsuarioComponent implements OnInit {
 
   ListarUsuarios() {
 
-    this.usuarioService.getUsuarios(this.numberPage).subscribe(
+    this.usuarioService.getUsuarios(this.current_page).subscribe(
       response => {
 
         if (response.status != 'Error') {
 
           this.usuario = response.data;
-          this.pagination = response.from;
+          this.CantidadPaginas = response.from;
+          this.current_page = response.current_page;
+          this.last_page = response.last_page;
+          this.total_elements = response.total;
 
         }
 
@@ -87,11 +92,12 @@ export class UsuarioComponent implements OnInit {
         response => {
 
           alert("Dato Guardado con éxito");
+          this.current_page = this.last_page;
           this.ListarUsuarios();
           form.reset();
 
-        },error=>{
-          alert(error.status+'\n');
+        }, error => {
+          alert(error.status + '\n');
           console.log(error);
         });
 
@@ -99,41 +105,40 @@ export class UsuarioComponent implements OnInit {
 
   }
 
-  editarDato(form: NgForm){
+  editarDato(form: NgForm) {
 
-    const usuarioU = form.value.usuarioeForm;
-    const nombresU = form.value.nombreseForm;
-    const apellidosU = form.value.apellidoseForm;
-    const tipoDeIdentificacionU = form.value.tipoDeDocumentoeForm;
-    const numeroDeIdentificacionU = form.value.numeroDeDocumentoeForm;
-    const fechaDeNacimientoU = form.value.fechaDeNacimientoeForm;
-    const contrasenaU = form.value.contrasenaeForm;
+    var respuesta = confirm("¿Seguro de editar el formulario?");
 
-    var userEdit = new Usuario(1, usuarioU, nombresU, apellidosU, tipoDeIdentificacionU, numeroDeIdentificacionU, fechaDeNacimientoU, contrasenaU);
+    if (respuesta == true) {
+
+      const usuarioU = this.usuarioeForm.nativeElement.value;
+      const nombresU = this.nombreseForm.nativeElement.value;
+      const apellidosU = this.apellidoseForm.nativeElement.value;
+      const tipoDeIdentificacionU = this.tipoDeDocumentoeForm.nativeElement.value;
+      const numeroDeIdentificacionU = this.numeroDeDocumentoeForm.nativeElement.value;
+      const fechaDeNacimientoU = this.fechaDeNacimientoeForm.nativeElement.value;
+      const contrasenaU = this.contrasenaeForm.nativeElement.value;
+
+      var userEdit = new Usuario(1, usuarioU, nombresU, apellidosU, tipoDeIdentificacionU, numeroDeIdentificacionU, fechaDeNacimientoU, contrasenaU);
 
       console.log(userEdit);
 
-      var respuesta = confirm("¿Seguro de editar el formulario?");
+      this.usuarioService.putUsuarios(userEdit, this.identificador).subscribe(
+        response => {
 
-      if(respuesta == true){
+          console.log(response);
 
-        this.usuarioService.putUsuarios(userEdit, this.identificador).subscribe(
-          response => {
+        },
+        error => {
 
-            alert("Dato Guardado con éxito");
-            this.ListarUsuarios();
-            form.reset();
+          alert("Dato Guardado con éxito");
+          this.ListarUsuarios();
+          form.reset();
 
-          },
-          error => {
+        }
+      );
 
-            alert(error.status+'\n');
-            console.log(error);
-
-          }
-        );
-
-      }
+    }
 
   }
 
@@ -147,13 +152,12 @@ export class UsuarioComponent implements OnInit {
         response => {
 
           alert(JSON.stringify(response.search));
+          this.ListarUsuarios();
 
         }
       );
 
     }
-
-    this.ListarUsuarios();
 
   }
 
@@ -163,7 +167,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   mostrar(
-    idt : HTMLTableCellElement,
+    idt: HTMLTableCellElement,
     usuariot: HTMLTableCellElement,
     nombrest: HTMLTableCellElement,
     apellidost: HTMLTableCellElement,
@@ -171,17 +175,40 @@ export class UsuarioComponent implements OnInit {
     numerodt: HTMLTableCellElement,
     nacimientot: HTMLTableCellElement,
     contrasenat: HTMLTableCellElement
-    ){
+  ) {
 
-      this.identificador = idt.innerHTML.valueOf();
-      this.usuarioeForm.nativeElement.value = usuariot.innerHTML.valueOf();
-      this.nombreseForm.nativeElement.value = nombrest.innerHTML.valueOf();
-      this.apellidoseForm.nativeElement.value = apellidost.innerHTML.valueOf();
-      this.tipoDeDocumentoeForm.nativeElement.value = tipodt.innerHTML.valueOf();
-      this.numeroDeDocumentoeForm.nativeElement.value = numerodt.innerHTML.valueOf();
-      this.fechaDeNacimientoeForm.nativeElement.value = nacimientot.innerHTML.valueOf();
-      this.contrasenaeForm.nativeElement.value = contrasenat.innerHTML.valueOf();
+    this.identificador = idt.innerHTML.valueOf();
+    this.usuarioeForm.nativeElement.value = usuariot.innerHTML.valueOf();
+    this.nombreseForm.nativeElement.value = nombrest.innerHTML.valueOf();
+    this.apellidoseForm.nativeElement.value = apellidost.innerHTML.valueOf();
+    this.tipoDeDocumentoeForm.nativeElement.value = tipodt.innerHTML.valueOf();
+    this.numeroDeDocumentoeForm.nativeElement.value = numerodt.innerHTML.valueOf();
+    this.fechaDeNacimientoeForm.nativeElement.value = nacimientot.innerHTML.valueOf();
+    this.contrasenaeForm.nativeElement.value = contrasenat.innerHTML.valueOf();
 
+  }
+
+  nextPage() {
+
+
+    if (this.current_page < this.last_page) {
+
+      this.current_page = this.current_page + 1;
+      this.ListarUsuarios();
+
+    }
+
+  }
+
+  bakPage() {
+
+    if (this.current_page > 1) {
+
+      this.current_page = this.current_page - 1;
+
+      this.ListarUsuarios();
+
+    }
   }
 
 }

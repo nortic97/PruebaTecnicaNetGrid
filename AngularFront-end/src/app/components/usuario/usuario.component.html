@@ -60,6 +60,21 @@
           </tr>
         </tbody>
       </table>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" type="button" aria-label="Previous" (click)="bakPage()" >
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link">{{ this.current_page }}</a></li>
+          <li class="page-item">
+            <a type="button" class="page-link" (click)="nextPage()" aria-label="Next">
+              <span aria-hidden="true" >&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>
