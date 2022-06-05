@@ -8,7 +8,6 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use UnexpectedValueException;
 
-use function PHPUnit\Framework\isNull;
 
 class JwtAuth
 {
@@ -66,13 +65,17 @@ class JwtAuth
 
             //Devolver datos codificados
 
-            if (isNull($tokenArray)) {
+            if(is_null($getToken)){
 
-                $data = $jwt;
-            } else {
+                $data =  $jwt;
+
+            }else{
 
                 $data = $decode;
+
             }
+
+
         } else {
 
             $data = array(
