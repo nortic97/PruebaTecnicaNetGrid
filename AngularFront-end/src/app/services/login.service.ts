@@ -17,10 +17,17 @@ export class LoginService {
   }
 
 
-  Login(usuario:Usuario, token:any = null): Observable<any>{
+  Login(usuario:any, getToken:any = null): Observable<any>{
+
+    if(getToken != null){
+
+      usuario.getToken = true;
+
+    }
 
     let json = JSON.stringify(usuario);
     let params = 'json='+json;
+
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
     return this.http.post<any>('http://127.0.0.1:8000/api/login', params, {headers: headers});

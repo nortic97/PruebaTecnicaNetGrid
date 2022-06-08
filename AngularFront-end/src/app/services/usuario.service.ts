@@ -10,6 +10,7 @@ import { LoginService } from './login.service';
 export class UsuarioService {
 
   public url:string = 'http://127.0.0.1:8000/api/usuario';
+  public identity:any;
 
   constructor(public http:HttpClient,
               private loginService: LoginService){ }
@@ -59,6 +60,24 @@ export class UsuarioService {
       var json = 'json='+params;
 
       return this.http.put(this.url+"/"+id, json, {headers: headers});
+
+    }
+
+    getIdentity(){
+
+      this.identity = localStorage.getItem('identity');
+
+      if(this.identity != ''){
+
+        this.identity = JSON.parse(this.identity);
+
+      }else{
+
+        this.identity = null;
+
+      }
+
+      return this.identity;
 
     }
 

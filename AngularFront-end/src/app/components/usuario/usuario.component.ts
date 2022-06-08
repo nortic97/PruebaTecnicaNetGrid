@@ -1,4 +1,3 @@
-import { formatNumber } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -32,6 +31,7 @@ export class UsuarioComponent implements OnInit {
   public current_page:number = 1;
   public last_page:number = 0;
   public total_elements:number = 0;
+  public identidad:any;
 
   private identificador = '';
 
@@ -44,6 +44,7 @@ export class UsuarioComponent implements OnInit {
   ngOnInit(): void {
 
     this.ListarUsuarios();
+    this.obtenerIdentidad();
 
   }
 
@@ -64,8 +65,13 @@ export class UsuarioComponent implements OnInit {
 
       }, error => {
 
-        alert("Error: " + error.status + "\n" + "Bad request");
-        localStorage.clear();
+          let message = [];
+
+          message = error.error.message;
+
+          alert("status: "+error.error.status+"\n\ncode: "+error.error.code+"\n\nmessage: "+ JSON.stringify(message).replace(/[,{}]/g , '\n\n'));
+
+          localStorage.clear();
 
       }
     );
@@ -97,8 +103,13 @@ export class UsuarioComponent implements OnInit {
           form.reset();
 
         }, error => {
-          alert(error.status + '\n');
-          console.log(error);
+
+          let message = [];
+
+          message = error.error.message;
+
+          alert("status: "+error.error.status+"\n\ncode: "+error.error.code+"\n\nmessage: "+ JSON.stringify(message).replace(/[,{}]/g , '\n\n'));
+
         });
 
     }
@@ -121,12 +132,10 @@ export class UsuarioComponent implements OnInit {
 
       var userEdit = new Usuario(1, usuarioU, nombresU, apellidosU, tipoDeIdentificacionU, numeroDeIdentificacionU, fechaDeNacimientoU, contrasenaU);
 
-      console.log(userEdit);
-
       this.usuarioService.putUsuarios(userEdit, this.identificador).subscribe(
         response => {
 
-          console.log(response);
+          console.log("ERROR");
 
         },
         error => {
@@ -151,7 +160,7 @@ export class UsuarioComponent implements OnInit {
       this.usuarioService.deleteUsuarios(id).subscribe(
         response => {
 
-          alert(JSON.stringify(response.search));
+          alert("Usuario eliminado \n"+JSON.stringify(response.search).replace(/[,{}]/g , '\n\n'));
           this.ListarUsuarios();
 
         }
@@ -162,8 +171,15 @@ export class UsuarioComponent implements OnInit {
   }
 
   CerrarSesion() {
-    localStorage.clear();
-    this.router.navigate(['login']);
+
+    let r = confirm("¿ Desea cerrar su sesión?")
+
+    if(r){
+
+      localStorage.clear();
+      this.router.navigate(['login']);
+
+    }
   }
 
   mostrar(
@@ -211,4 +227,9 @@ export class UsuarioComponent implements OnInit {
     }
   }
 
+  obtenerIdentidad(){
+
+    this.identidad = this.usuarioService.getIdentity();
+
+  }
 }
